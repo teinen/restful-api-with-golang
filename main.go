@@ -1,28 +1,34 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-/** Person struct */
+// Person
 type Person struct {
-	ID string `json:"id,omitempty"`
-	Firstname string `json:"firstname,omitempty"`
-	Lastname string `json:"lastname,omitempty"`
-	Address *Address `json:"address,omitempty"`
+	ID        string   `json:"id,omitempty"`
+	Firstname string   `json:"firstname,omitempty"`
+	Lastname  string   `json:"lastname,omitempty"`
+	Address   *Address `json:"address,omitempty"`
 }
 
-/** Address struct */
+// Address
 type Address struct {
-	City string `json:"city,omitempty"`
+	City  string `json:"city,omitempty"`
 	State string `json:"state,omitempty"`
 }
 
+var people []Person
+
 // main function
 func main() {
+	// add people
+	addPeople()
+
 	// create router
 	router := mux.NewRouter()
 
@@ -35,7 +41,18 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
 
-func GetPeople(w http.ResponseWriter, r *http.Request)    {}
-func GetPerson(w http.ResponseWriter, r *http.Request)    {}
+func addPeople() {
+	people = append(people, Person{ID: "1", Firstname: "John", Lastname: "Doe", Address: &Address{City: "City X", State: "State X"}})
+	people = append(people, Person{ID: "2", Firstname: "Koko", Lastname: "Doe", Address: &Address{City: "City Z", State: "State Y"}})
+	people = append(people, Person{ID: "3", Firstname: "Taro", Lastname: "Tanaka"})
+}
+
+func GetPeople(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(people)
+}
+
+func GetPerson(w http.ResponseWriter, r *http.Request) {}
+
 func CreatePeople(w http.ResponseWriter, r *http.Request) {}
+
 func DeletePeople(w http.ResponseWriter, r *http.Request) {}
