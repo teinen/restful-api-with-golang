@@ -51,7 +51,16 @@ func GetPeople(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(people)
 }
 
-func GetPerson(w http.ResponseWriter, r *http.Request) {}
+func GetPerson(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	for _, person := range people {
+		if person.ID == vars["id"] {
+			json.NewEncoder(w).Encode(person)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode(&Person{})
+}
 
 func CreatePeople(w http.ResponseWriter, r *http.Request) {}
 
